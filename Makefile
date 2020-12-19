@@ -1,5 +1,5 @@
-main: main.o thread_queue.o atomic_functions.o mutex_atomic.o rwlocks.o semaphores.o
-	gcc -std=c11 -Wall -Wextra -Werror -Wfatal-errors -g main.o thread_queue.o atomic_functions.o mutex_atomic.o rwlocks.o semaphores.o -o main -pthread
+main: main.o thread_queue.o atomic_functions.o mutex_atomic.o mutex_queue.o rwlocks.o semaphores.o
+	gcc -std=c11 -Wall -Wextra -Werror -Wfatal-errors -g main.o thread_queue.o atomic_functions.o mutex_atomic.o mutex_queue.o rwlocks.o semaphores.o -o main -pthread
 
 main.o: main.c
 	gcc -std=c11 -Wall -Wextra -Werror -Wfatal-errors -g -c main.c -pthread

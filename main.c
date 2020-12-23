@@ -42,12 +42,13 @@ int increase_count(int count) {
 
 // Functia apelata de thread-uri
 void* pthread_function(void* v) {
-  int req = *((int*)v);
-  if (decrease_count(req) == -1) {
-    printf("Eroare la alocarea de %d resurse\n", req);
+  int* req = (int*)v;
+  if (decrease_count(*req) == -1) {
+    printf("Eroare la alocarea de %d resurse\n", *req);
   } else {
-    increase_count(req);
+    increase_count(*req);
   }
+  free(req);
   return NULL;
 }
 
@@ -56,7 +57,7 @@ int main() {
   mutex_queue_init(&mtx);
 
   bool ok = true;
-  int tests = 1000;
+  int tests = 100;
   while (tests--) {
     // Thread-urile (crearea lor)
     pthread_t* thr = malloc(sizeof(pthread_t) * N);
@@ -85,7 +86,9 @@ int main() {
     }
 
     ok &= (available_resources == MAX_RESOURCES);
-    }
+    free(thr);
+    free(res);
+  }
   printf("Tests passed %d \n", ok);
 
   mutex_queue_destroy(&mtx);

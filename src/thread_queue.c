@@ -22,7 +22,7 @@ void queue_remove(thread_queue *q) {
     free(head);
     head = nx;
   }
-
+  free(q->in_queue);
   free(q);
 }
 

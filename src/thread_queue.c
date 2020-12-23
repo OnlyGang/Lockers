@@ -9,6 +9,8 @@
 
 void queue_init(thread_queue *q) {
   q->count = 0;
+  q->new_id = 0;
+  q->in_queue = malloc(HASH_SIZE * sizeof(bool));
   q->front = NULL;
   q->back = NULL;
 }
@@ -33,8 +35,10 @@ tq_node *create_node(pthread_t *thr) {
 
 void free_node(tq_node *node) { free(node); }
 
-void push(thread_queue *q, pthread_t *thr) {
+int push(thread_queue *q, pthread_t *thr) {
   tq_node *new_node = create_node(thr);
+  new_node->hash_id = q->new_id++;
+  q->in_queue[new_node->hash_id] = true;
   if (q->back == NULL) {
     q->front = new_node;
     q->back = new_node;
@@ -43,6 +47,7 @@ void push(thread_queue *q, pthread_t *thr) {
     q->back = new_node;
   }
   q->count++;
+  return new_node->hash_id;
 }
 
 pthread_t *front(thread_queue *q) {
@@ -55,6 +60,7 @@ pthread_t *pop(thread_queue *q) {
   }
   tq_node *to_remove = q->front;
   pthread_t *popped = to_remove->thr;
+  q->in_queue[to_remove->hash_id] = false;
   q->front = to_remove->next;
   if (q->count == 1) q->back = NULL;
   free_node(to_remove);

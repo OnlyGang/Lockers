@@ -1,13 +1,17 @@
 #include <pthread.h>
+#include <stdatomic.h>
 #include <stdbool.h>
 
 #include "thread_queue.h"
 
 typedef struct mutex_queue {
-  bool locked;
+  atomic_bool lock;
+  atomic_bool guard;
   thread_queue* q;
   pthread_t* locked_by;
 } mutex_queue;
+
+void signal_handler(int sig);
 
 void mutex_queue_init(mutex_queue* mtxq);
 

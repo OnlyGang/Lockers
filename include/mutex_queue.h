@@ -7,6 +7,7 @@
 typedef struct mutex_queue {
   atomic_bool lock;
   atomic_bool guard;
+  atomic_bool sleep_guard;
   thread_queue* q;
   pthread_t* locked_by;
 } mutex_queue;

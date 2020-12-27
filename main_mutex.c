@@ -32,7 +32,6 @@ int decrease_count(int count) {
 }
 
 int increase_count(int count) {
-  printf("here4\n");
   mutex_queue_lock(&mtx);
   available_resources += count;
   printf("Released %d resources, %d remaining\n", count, available_resources);
@@ -57,7 +56,7 @@ int main() {
   mutex_queue_init(&mtx);
 
   bool ok = true;
-  int tests = 100;
+  int tests = 10000;
   while (tests--) {
     // Thread-urile (crearea lor)
     pthread_t* thr = malloc(sizeof(pthread_t) * N);

@@ -1,14 +1,16 @@
 #include <pthread.h>
 #include <stdbool.h>
 
-#include "thread_queue.h"
+#include "mutex_queue.h"
 
 typedef struct semaphore {
   int S;
-  pthread_mutex_t* mtx;  // This should be changed
-  thread_queue* q;
-  pthread_t* locked_by;
+  mutex_queue* mtxq;
+  thread_queue* sem_q;
+  pthread_mutex_t mtx;
 } semaphore;
+
+void signal_handler_2(int sig);
 
 void semaphore_init(semaphore* sem, int val);
 

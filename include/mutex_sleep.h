@@ -1,3 +1,6 @@
+#ifndef MUTEX_SLEEP_
+#define MUTEX_SLEEP_
+
 #include <pthread.h>
 #include <stdatomic.h>
 #include <stdbool.h>
@@ -20,3 +23,5 @@ int mutex_sleep_unlock(mutex_sleep* mtxq);
 int mutex_sleep_trylock(mutex_sleep* mtxq);
 
 void mutex_sleep_destroy(mutex_sleep* mtxq);
+
+#endif  // MUTEX_SLEEP_

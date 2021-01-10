@@ -38,12 +38,13 @@ int mutex_queue_lock(mutex_queue* mtxq) {
   pthread_t* thr = malloc(sizeof(pthread_t));
   *thr = pthread_self();
   if (atomic_load(&(mtxq->lock))) {
+    /// PENTRU IMBUANATATIRE, SA ADAUG UN BUSY WAIT MIC
+
     // printf("Thread %ld entered queue zone\n", pthread_self() % 1000);
     int hash_id = push(mtxq->q, thr);
     atomic_store(&(mtxq->guard), 0);
 
     /* Sleep part */
-    // usleep((useconds_t)1000);
     while (__atomic_test_and_set(&(mtxq->sleep_guard), __ATOMIC_ACQ_REL) == 1)
       ;
     if (mtxq->q->in_queue[hash_id]) {
@@ -51,7 +52,6 @@ int mutex_queue_lock(mutex_queue* mtxq) {
       // printf("Going to sleep %d\n", hash_id);
       atomic_store(&(mtxq->sleep_guard), 0);
       pause();
-      // usleep((useconds_t)100);
       // printf("Wake up, %d\n", hash_id);
     }
     if (atomic_load(&(mtxq->sleep_guard)) == 1)
@@ -93,13 +93,13 @@ int mutex_queue_unlock(mutex_queue* mtxq) {
   if (!empty(mtxq->q)) {
     while (__atomic_test_and_set(&(mtxq->sleep_guard), __ATOMIC_ACQ_REL) == 1)
       ;
-    usleep((useconds_t)100);
+    usleep((useconds_t)200);
     pthread_t* next = pop(mtxq->q);
     if (pthread_kill(*next, SIGUSR1) != 0) {
       perror("Couldn't wake up the thread\n");
       return errno;
     };
-    usleep((useconds_t)100);
+    usleep((useconds_t)50);
     // printf("Popped %ld\n", *next % 1000);
     atomic_store(&(mtxq->sleep_guard), 0);
   } else {

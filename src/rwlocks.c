@@ -5,39 +5,39 @@
 #include <unistd.h>
 
 void rw_lock_init(rw_lock *rw) {
-  semaphore_init(&rw->lock, 1);
-  semaphore_init(&rw->writelock, 1);
+  mutex_busy_init(&rw->lock);
+  mutex_busy_init(&rw->writelock);
 }
 
 int rw_lock_acquire_readlock(rw_lock *rw) {
-  semaphore_wait(&rw->lock);
+  mutex_busy_lock(&rw->lock);
   rw->readers++;
   if (rw->readers == 1) {
-    semaphore_wait(&rw->lock);
+    mutex_busy_lock(&rw->writelock);
   }
-  semaphore_post(&rw->lock);
+  mutex_busy_unlock(&rw->lock);
   return 0;
 }
 
 int rw_lock_release_readlock(rw_lock *rw) {
-  semaphore_wait(&rw->lock);
+  mutex_busy_lock(&rw->lock);
   rw->readers--;
   if (rw->readers == 0) {
-    semaphore_post(&rw->writelock);
+    mutex_busy_unlock(&rw->writelock);
   }
-  semaphore_post(&rw->lock);
+  mutex_busy_unlock(&rw->lock);
   return 0;
 }
 
 int rw_lock_acquire_writelock(rw_lock *rw) {
-  return semaphore_wait(&rw->writelock);
+  return mutex_busy_lock(&rw->writelock);
 }
 
 int rw_lock_release_writelock(rw_lock *rw) {
-  return semaphore_wait(&rw->writelock);
+  return mutex_busy_unlock(&rw->writelock);
 }
 
 void rw_lock_destroy(rw_lock *rw) {
-  semaphore_destroy(&rw->lock);
-  semaphore_destroy(&rw->writelock);
+  mutex_busy_destroy(&rw->lock);
+  mutex_busy_destroy(&rw->writelock);
 }

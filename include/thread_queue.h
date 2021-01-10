@@ -1,3 +1,6 @@
+#ifndef THREAD_QUEUE_
+#define THREAD_QUEUE_
+
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -37,3 +40,5 @@ int size(thread_queue *q);
 int empty(thread_queue *q);
 
 void queue_test(thread_queue *q);
+
+#endif  // THREAD_QUEUE_

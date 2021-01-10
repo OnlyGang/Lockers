@@ -1,3 +1,6 @@
+#ifndef SEMAPHORES_
+#define SEMAPHORES_
+
 #include <pthread.h>
 #include <stdbool.h>
 
@@ -19,3 +22,5 @@ int semaphore_wait(semaphore* sem);
 int semaphore_post(semaphore* sem);
 
 void semaphore_destroy(semaphore* sem);
+
+#endif  // SEMAPHORES_

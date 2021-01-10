@@ -50,34 +50,30 @@ void* tfun(void* v) {
 }
 
 int main() {
-  int tests = 10;
-  bool ok = true;
-  while (tests--) {
-    // Initializez semaforul
-    init();
-    // Creez si pornesc threadurile
-    pthread_t* thr = malloc(sizeof(pthread_t) * N);
-    for (int i = 0; i < N; i++) {
-      int* tid = malloc(sizeof(int));
-      *tid = i;
-      if (pthread_create(&thr[i], NULL, tfun, tid)) {
-        perror(NULL);
-        return errno;
-      }
+  // Initializez semaforul
+  init();
+  // Creez si pornesc threadurile
+  pthread_t* thr = malloc(sizeof(pthread_t) * N);
+  for (int i = 0; i < N; i++) {
+    int* tid = malloc(sizeof(int));
+    *tid = i;
+    if (pthread_create(&thr[i], NULL, tfun, tid)) {
+      perror(NULL);
+      return errno;
     }
-
-    // Join la threaduri
-    for (int i = 0; i < N; i++) {
-      if (pthread_join(thr[i], NULL)) {
-        perror(NULL);
-        return errno;
-      }
-    }
-    printf("Tests passed %d\n\n", ok);
-    free(thr);
-    mutex_queue_destroy(&mtx);
-    semaphore_destroy(&sem);
   }
+
+  // Join la threaduri
+  for (int i = 0; i < N; i++) {
+    if (pthread_join(thr[i], NULL)) {
+      perror(NULL);
+      return errno;
+    }
+  }
+  printf("Operatiune efectuata cu succes\n");
+  free(thr);
+  mutex_queue_destroy(&mtx);
+  semaphore_destroy(&sem);
 
   return 0;
 }

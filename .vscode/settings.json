@@ -1,6 +1,7 @@
 {
   "files.associations": {
     "*.rmd": "markdown",
-    "random": "c"
+    "random": "c",
+    "condition_variable": "c"
   }
 }

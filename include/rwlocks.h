@@ -1,8 +1,11 @@
-#include "semaphores.h"
+#ifndef RWLOCKS_
+#define RWLOCKS_
+
+#include "mutex_busy.h"
 
 typedef struct rw_lock {
-  semaphore lock;       // Semafor binar
-  semaphore writelock;  // Semafor pentru writer
+  mutex_busy writelock;  // Semafor pentru writer
+  mutex_busy lock;
   int readers;
 } rw_lock;
 
@@ -17,3 +20,5 @@ int rw_lock_acquire_writelock(rw_lock *rw);
 int rw_lock_release_writelock(rw_lock *rw);
 
 void rw_lock_destroy(rw_lock *rw);
+
+#endif  // RWLOCKS_

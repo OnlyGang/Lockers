@@ -1,3 +1,6 @@
+#ifndef MUTEX_QUEUE_
+#define MUTEX_QUEUE_
+
 #include <pthread.h>
 #include <stdatomic.h>
 #include <stdbool.h>
@@ -23,3 +26,5 @@ int mutex_queue_unlock(mutex_queue* mtxq);
 int mutex_queue_trylock(mutex_queue* mtxq);
 
 void mutex_queue_destroy(mutex_queue* mtxq);
+
+#endif  // MUTEX_QUEUE_

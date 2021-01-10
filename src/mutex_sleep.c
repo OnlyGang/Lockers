@@ -11,10 +11,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-// Ok deci daca initializezi deodata un flag, atunci ii dai ATOMIC FLAG INIT
-// Daca deja e inializat, ii dai atomic_flag_clear, care e echivalent cu INIT
-// atomic_flag lock = ATOMIC_FLAG_INIT;
-
 void mutex_sleep_init(mutex_sleep* mtxq) {
   atomic_store(&(mtxq->lock), 0);
   atomic_store(&(mtxq->guard), 0);
@@ -36,13 +32,9 @@ int mutex_sleep_lock(mutex_sleep* mtxq) {
     // printf("Thread %ld entered queue zone\n", pthread_self() % 1000);
     int hash_id = push(mtxq->q, thr);
     atomic_store(&(mtxq->guard), 0);
-
-    /* Sleep part */
-    // usleep((useconds_t)1000);
     while (mtxq->q->in_queue[hash_id]) {
       // printf("Thread %ld entered the sleep\n", pthread_self() % 1000);
       // printf("Going to sleep %d\n", hash_id);
-      // pause();
       usleep((useconds_t)100);
       // printf("Wake up, %d\n", hash_id);
     }
@@ -82,11 +74,6 @@ int mutex_sleep_unlock(mutex_sleep* mtxq) {
 
   if (!empty(mtxq->q)) {
     pthread_t* next = pop(mtxq->q);
-    // if (pthread_kill(*next, SIGUSR1) != 0) {
-    //   perror("Couldn't wake up the thread\n");
-    //   return errno;
-    // };
-    // usleep((useconds_t)1000);
     // printf("Popped %ld\n", *next % 1000);
     (void)next;
   } else {

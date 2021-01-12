@@ -33,10 +33,7 @@ int mutex_sleep_lock(mutex_sleep* mtxq) {
     int hash_id = push(mtxq->q, thr);
     atomic_store(&(mtxq->guard), 0);
     while (mtxq->q->in_queue[hash_id]) {
-      // printf("Thread %ld entered the sleep\n", pthread_self() % 1000);
-      // printf("Going to sleep %d\n", hash_id);
       usleep((useconds_t)100);
-      // printf("Wake up, %d\n", hash_id);
     }
     // printf("Thread %ld assign the lock after sleep\n", pthread_self() %
     // 1000);

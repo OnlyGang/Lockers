@@ -10,7 +10,6 @@ typedef struct semaphore {
   int S;
   mutex_queue* mtxq;
   thread_queue* sem_q;
-  pthread_mutex_t mtx;
 } semaphore;
 
 void signal_handler_2(int sig);

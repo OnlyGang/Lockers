@@ -44,7 +44,7 @@ void* transfer_saving_to_checking(void* amount) {
   int* i_amount = (int*)amount;
   rw_lock_acquire_writelock(&account_lock);
   saving_balance -= *i_amount;
-  // usleep(10);
+  usleep(100);
   checking_balance += *i_amount;
   printf("Trasfered from saving to checking: %d\n", *i_amount);
   printf("Checking: %d, Saving: %d\n", checking_balance, saving_balance);
